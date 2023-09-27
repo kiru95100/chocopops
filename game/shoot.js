@@ -58,43 +58,42 @@ function bullet_collision()
 function player_collision()
 {
     //collision between player and walls
-    var x = player1.graphic.position.x + WIDTH / 2;
-    var y = player1.graphic.position.y + HEIGHT / 2;
+    var x = player1.graphic.position.x;
+    var y = player1.graphic.position.y;
 
-    if ( x > WIDTH )
-        player1.graphic.position.x -= x - WIDTH;
-    if ( y < 0 )
-        player1.graphic.position.y -= y;
-    if ( y > HEIGHT )
-        player1.graphic.position.y -= y - HEIGHT;
+    var minX = -WIDTH / 2;
+    var minY = -HEIGHT / 2;
 
+    if (x < minX) {
+        player1.graphic.position.x = minX;
+    }
+
+    if (y < minY) {
+        player1.graphic.position.y = minY;
+    } else if (y > -minY) { 
+        player1.graphic.position.y = -minY;
+    }
 }
 
-function player_falling()
-{
+function player_falling() {
     var nb_tile = 10;
     var sizeOfTileX = WIDTH / nb_tile;
     var sizeOfTileY = HEIGHT / nb_tile;
     var x = player1.graphic.position.x | 0;
     var y = player1.graphic.position.y | 0;
-    var length = noGround.length;
-    var element = null;
 
-    for (var i = 0; i < length; i++) {
-        element = noGround[i];
+    var playerTileX = Math.floor((x + WIDTH / 2) / sizeOfTileX);
+    var playerTileY = Math.floor((y + HEIGHT / 2) / sizeOfTileY);
 
-        var tileX = (element[0]) | 0;
-        var tileY = (element[1]) | 0;
-        var mtileX = (element[0] + sizeOfTileX) | 0;
-        var mtileY = (element[1] + sizeOfTileY) | 0;
+    for (var i = 0; i < noGround.length; i++) {
+        var tileX = Math.floor((noGround[i][0] + WIDTH / 2) / sizeOfTileX);
+        var tileY = Math.floor((noGround[i][1] + HEIGHT / 2) / sizeOfTileY);
 
-        if ((x > tileX)
-            && (x < mtileX)
-            && (y > tileY) 
-            && (y < mtileY))
-        {
-           player1.dead();
+        if (playerTileX === tileX && playerTileY === tileY) {
+            player1.dead(); 
+            return; 
         }
     }
-
 }
+
+
